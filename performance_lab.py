@@ -17,13 +17,13 @@ def most_frequent(numbers):
     if not numbers:
         return None
 
-    counts = {}              # value -> how many times we've seen it
+    counts = {}              
     best_value = None
     best_count = 0
 
     for value in numbers:
         counts[value] = counts.get(value, 0) + 1
-        if counts[value] > best_count:       # track the leader as we go
+        if counts[value] > best_count:       
             best_count = counts[value]
             best_value = value
 
@@ -34,28 +34,25 @@ Time and Space Analysis for problem 1:
 - Best-case: O(n). We still check every element.
 - Worst-case: O(n). One pass, and dictionary lookups are O(1).
 - Average-case: O(n).
-- Space complexity: O(n) in the worst case, because the dictionary stores
-  each different value.
-- Why this approach? A dictionary counts each value in one pass. Counting with
-  numbers.count() for every value would be O(n^2).
-- Could it be optimized? Not really. We have to look at every element, so
-  O(n) is the best possible.
+- Space complexity: O(n) in the worst case, because the dictionary stores each different value.
+- Why this approach? A dictionary counts each value in one pass. Counting with numbers.count() for every value would be O(n^2).
+- Could it be optimized? Not really. We have to look at every element, so O(n) is the best possible.
 - Trade-offs: It uses extra memory to save time. Sorting first would use less
-  memory but take O(n log n) time.
+  memory but take more time.
 """
 
 
 def test_most_frequent():
-    assert most_frequent([1, 3, 2, 3, 4, 1, 3]) == 3        # example
-    assert most_frequent([]) is None                         # empty
-    assert most_frequent([7]) == 7                           # single element
-    assert most_frequent([5, 5, 5, 5]) == 5                  # all identical
-    assert most_frequent([-1, -1, 2, 2, -1]) == -1           # negatives
-    assert most_frequent([0, 0, 1]) == 0                     # zero
-    assert most_frequent([1, 2, 3, 1, 2, 3]) in {1, 2, 3}    # full tie
-    assert most_frequent([1, 2, 2, 1]) in {1, 2}             # two-way tie
+    assert most_frequent([1, 3, 2, 3, 4, 1, 3]) == 3        
+    assert most_frequent([]) is None                         
+    assert most_frequent([7]) == 7                            
+    assert most_frequent([5, 5, 5, 5]) == 5                   
+    assert most_frequent([-1, -1, 2, 2, -1]) == -1           
+    assert most_frequent([0, 0, 1]) == 0                     
+    assert most_frequent([1, 2, 3, 1, 2, 3]) in {1, 2, 3}    
+    assert most_frequent([1, 2, 2, 1]) in {1, 2}            
     big = list(range(1000)) + [42] * 5
-    assert most_frequent(big) == 42                          # larger input
+    assert most_frequent(big) == 42                          
     print("Problem 1: all tests passed")
 
 
@@ -71,7 +68,7 @@ def remove_duplicates(nums):
     seen = set()
     result = []
     for n in nums:
-        if n not in seen:        # O(1) average membership check
+        if n not in seen:        
             seen.add(n)
             result.append(n)
     return result
@@ -122,7 +119,7 @@ def find_pairs_original(nums, target):
     pairs = []
     n = len(nums)
     for i in range(n):
-        for j in range(i + 1, n):          # check every pair once
+        for j in range(i + 1, n):          
             if nums[i] + nums[j] == target:
                 pairs.append((min(nums[i], nums[j]), max(nums[i], nums[j])))
     return pairs
@@ -132,12 +129,7 @@ def find_pairs(nums, target):
     """
     IMPROVED VERSION.
 
-    HOW I OPTIMIZED: My first version (find_pairs_original above) used two
-    loops to check every possible pair. That takes O(n^2) time. This version
-    loops through the list once and keeps a set of the numbers it has seen.
-    For each number, it checks if the number it needs (target - number) is
-    already in the set. Checking a set is fast, so the whole thing takes O(n)
-    time. The trade-off is that it uses extra memory for the set.
+    HOW I OPTIMIZED: My first version used two loops to check every possible pair. This version loops through the list once and keeps a set of the numbers it has seen. The trade-off is that it uses extra memory for the set.
     """
     seen = set()
     pairs = []
@@ -151,28 +143,20 @@ def find_pairs(nums, target):
 """
 Time and Space Analysis for problem 3 (the improved version, find_pairs):
 - Best-case: O(n). We still look at every number once.
-- Worst-case: O(n). Checking a set is fast, so each number takes about the
-  same small amount of time.
+- Worst-case: O(n). Checking a set is fast, so each number takes about the same amount of time.
 - Average-case: O(n).
-- Space complexity: O(n). The set holds the numbers we have seen, and the
-  list holds the pairs we found.
-- Why this approach? For each number, we only need to ask, "Have I already
-  seen the number that adds up to the target?" A set answers that quickly.
-  My first version checked every pair with two loops, which was much slower.
-- Could it be optimized? Not much. We have to look at every number, so O(n)
-  is the best possible for time. We could use less memory by sorting the list
-  first, but sorting is slower (O(n log n)).
+- Space complexity: O(n). The set holds the numbers we have seen, and the list holds the pairs we found.
+- Why this approach?  A set answers if a number has been seen quickly.
+- Could it be optimized? No. We have to look at every number, so O(n) is the best.
 - Trade-offs:
-    * Two loops (first version): slow, O(n^2), but uses almost no extra
-      memory.
-    * Set (this version): fast, O(n), but uses extra memory.
+    -Two loops is slow, but uses less memory.
+    - The set is faster but uses extra memory.
 
 Speed comparison (first version vs. improved version, tested on my computer):
     n = 1,000   : first ~ 14.3 ms   | improved ~ 0.11 ms
     n = 5,000   : first ~ 365.0 ms   | improved ~ 0.60 ms
     n = 10,000  : first ~ 1,452.0 ms  | improved ~ 1.20 ms
-The first version gets about 4 times slower each time the list size doubles.
-The improved version only gets about 2 times slower.
+The first version gets about 4 times slower when the list size doubles. The improved version only gets 2 times slower.
 Memory: the improved version uses a set, which is a small price for the speed.
 """
 
@@ -182,16 +166,15 @@ def test_find_pairs():
         return sorted(tuple(sorted(p)) for p in pairs)
 
     for fn in (find_pairs, find_pairs_original):
-        assert normalize(fn([1, 2, 3, 4], 5)) == [(1, 4), (2, 3)]      # example
-        assert fn([], 5) == []                                          # empty
-        assert fn([3], 3) == []                                         # single
-        assert fn([1, 2, 3], 100) == []                                 # none
-        assert normalize(fn([2, 4], 6)) == [(2, 4)]                     # exactly two
-        assert fn([2, 5, 7], 4) == []                                   # no self-pair (2+2)
-        assert normalize(fn([-3, -1, 0, 1, 3], 0)) == [(-3, 3), (-1, 1)]  # negatives
-        assert normalize(fn([0, 5], 5)) == [(0, 5)]                     # zero
+        assert normalize(fn([1, 2, 3, 4], 5)) == [(1, 4), (2, 3)]      
+        assert fn([], 5) == []                                          
+        assert fn([3], 3) == []                                         
+        assert fn([1, 2, 3], 100) == []                                 
+        assert normalize(fn([2, 4], 6)) == [(2, 4)]                     
+        assert fn([2, 5, 7], 4) == []                                   
+        assert normalize(fn([-3, -1, 0, 1, 3], 0)) == [(-3, 3), (-1, 1)]  
+        assert normalize(fn([0, 5], 5)) == [(0, 5)]                     
         assert normalize(fn([1, 2, 3, 4, 5, 6], 7)) == [(1, 6), (2, 5), (3, 4)]
-    # both implementations agree on a larger input
     data = list(range(-500, 500))
     assert normalize(find_pairs(data, 10)) == normalize(find_pairs_original(data, 10))
     print("Problem 3: all tests passed")
@@ -206,22 +189,17 @@ def test_find_pairs():
 # add_n_items(6) → should print when resizing happens.
 
 def add_n_items(n, initial_capacity=4, verbose=True):
-    """
-    Add n items one at a time to a fixed-capacity array. When full, double the
-    capacity: allocate a new array and copy every item over.
-
-    Returns (size, capacity, total_copies) so the amortized cost can be checked.
-    """
+    
     capacity = initial_capacity
-    storage = [None] * capacity          # the "fixed-size" backing array
+    storage = [None] * capacity         
     size = 0
-    total_copies = 0                     # how many element copies resizing cost
+    total_copies = 0                    
 
     for item in range(n):
-        if size == capacity:             # full: must resize before adding
+        if size == capacity:             
             new_capacity = capacity * 2
             new_storage = [None] * new_capacity
-            for i in range(size):        # copy all existing values
+            for i in range(size):        
                 new_storage[i] = storage[i]
             total_copies += size
             if verbose:
@@ -258,21 +236,15 @@ def test_add_n_items():
 
     # n = 0: nothing added, no resize
     assert add_n_items(0, verbose=False) == (0, 4, 0)
-    # fewer than capacity: no resize
     assert add_n_items(3, verbose=False) == (3, 4, 0)
-    # exactly capacity: still no resize (resize only happens on the NEXT add)
     assert add_n_items(4, verbose=False) == (4, 4, 0)
-    # one over capacity: exactly one resize, copying 4 items
     assert add_n_items(5, verbose=False) == (5, 8, 4)
-    # example from the prompt
     assert add_n_items(6, verbose=False) == (6, 8, 4)
-    # two resizes: 4 + 8 copies
     assert add_n_items(9, verbose=False) == (9, 16, 12)
-    # capacity of 1 edge case
     assert add_n_items(5, initial_capacity=1, verbose=False) == (5, 8, 1 + 2 + 4)
 
-    # printing happens only when resizing happens
-    buf = io.StringIO()
+   
+    
     with redirect_stdout(buf):
         add_n_items(3)
     assert buf.getvalue() == ""
@@ -281,7 +253,7 @@ def test_add_n_items():
         add_n_items(6)
     assert buf.getvalue().count("Resizing") == 1
 
-    # amortized check: total copies stay below 2n for large n
+
     for n in (10, 100, 1000, 100000):
         size, cap, copies = add_n_items(n, verbose=False)
         assert size == n and cap >= n and copies < 2 * n
@@ -302,7 +274,7 @@ def running_total(nums):
     result = []
     total = 0
     for n in nums:
-        total += n               # reuse the previous sum instead of re-adding
+        total += n              
         result.append(total)
     return result
 
@@ -312,15 +284,10 @@ Time and Space Analysis for problem 5:
 - Worst-case: O(n). For each number, we do one addition and one append.
 - Average-case: O(n).
 - Space complexity: O(n). The new list holds one total for every number.
-- Why this approach? Each running total is the last total plus the current
-  number, so we just keep one running sum. Adding up the list from the start
-  for every position would repeat a lot of work and be O(n^2).
+- Why this approach? Each running total is the last total plus the current number, so we just keep one running sum. 
 - Could it be optimized? Not really. We have to look at every number, so O(n)
-  is the best possible. itertools.accumulate does the same thing with less
-  code.
-- Trade-offs: Making a new list keeps the original list safe, but uses extra
-  memory. Changing the original list would save memory, but we would lose the
-  original numbers.
+  is the best possible.
+- Trade-offs: Making a new list keeps the original list safe, but uses extra memory. Changing the original list would save memory, but we would lose data.
 """
 
 
